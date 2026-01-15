@@ -47,7 +47,10 @@ class MMFNLitModel(L.LightningModule):
         self.save_hyperparameters()
         self.learning_rate = learning_rate
         self.num_classes = num_classes
-        self.act_fn = activation
+        if isinstance(activation, (dict, DictConfig)):
+            self.act_fn = instantiate(activation)
+        else:
+            self.act_fn = activation
         self.model = MMFN(num_classes=num_classes,
                           tabular_dim=4, 
                           ratio=ratio, 
