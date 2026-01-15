@@ -47,14 +47,11 @@ class MMFNLitModel(L.LightningModule):
         self.save_hyperparameters()
         self.learning_rate = learning_rate
         self.num_classes = num_classes
-        if isinstance(activation, (dict, DictConfig)):
-            self.act_fn = instantiate(activation)
-        else:
-            self.act_fn = activation
+        self.act_fn = activation
         self.model = MMFN(num_classes=num_classes,
                           tabular_dim=4, 
                           ratio=ratio, 
-                          activational_cls=self.act_fn)
+                          activation_cls=self.act_fn)
 
     def forward(self, img, tab):
         return self.model(img, tab)
