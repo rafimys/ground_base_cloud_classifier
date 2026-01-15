@@ -1,0 +1,8 @@
+lightning
+hydra-core
+wandb
+gdown
+pandas
+openpyxl
+tensorboard
+torchmetrics
