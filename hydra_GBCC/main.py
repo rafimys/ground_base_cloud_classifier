@@ -79,7 +79,8 @@ def main(cfg: DictConfig):
         logger=logger,
         log_every_n_steps = 10,
         callbacks=[early_stopping, checkpoint_callback, lr_monitor, tqdm_progress_bar],
-        fast_dev_run=False
+        fast_dev_run=False,
+        enable_progress_bar=cfg.trainer.enable_progress_bar
     )
 
     trainer.fit(model=model, datamodule=data_module)
