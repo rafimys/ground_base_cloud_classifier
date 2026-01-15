@@ -24,10 +24,10 @@ class ResNet50Backbone(nn.Module):
                 param.requires_grad = False
 
             for param in self.layer2.parameters():
-                param.requires_grad = True
+                param.requires_grad = False
 
             for param in self.layer3.parameters():
-                param.requires_grad = True
+                param.requires_grad = False
 
 class AttentiveNetwork(nn.Module):
 
