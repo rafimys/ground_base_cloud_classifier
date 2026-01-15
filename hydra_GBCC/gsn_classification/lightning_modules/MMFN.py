@@ -38,7 +38,6 @@ import torchmetrics
 from torchmetrics.classification import accuracy
 from gsn_classification.lightning_modules.MMFN_model import MMFN
 
-
 class MMFNLitModel(L.LightningModule):
     def __init__(self, num_classes, learning_rate, ratio, **kwargs):
         super().__init__()

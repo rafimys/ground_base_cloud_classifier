@@ -20,9 +20,6 @@ import zipfile
 
 from gsn_classification.lightning_data_modules.tab import CloudImageTabularDataset
 
-
-
-
 class CloudDataModule(L.LightningDataModule):
     def __init__(self, batch_size, data_dir: str = './MGCD/', train_dataset_path='./MGCD/MGCD/train', test_dataset_path='./MGCD/MGCD/test', **kwargs):
         super().__init__()
@@ -62,7 +59,6 @@ class CloudDataModule(L.LightningDataModule):
                 if os.path.isdir(image_path):
                     datasets.append(CloudImageTabularDataset(excel_path, image_path, transform))
         return ConcatDataset(datasets)
-
 
     def _get_all_labels(self, dataset):
         return [dataset[i][2].item() for i in range(len(dataset))]

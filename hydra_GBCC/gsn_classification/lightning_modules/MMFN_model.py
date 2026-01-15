@@ -1,9 +1,6 @@
-
-
 from torchvision.models import resnet50
 import torch
 from torch import nn, tensor
-
 
 class ResNet50Backbone(nn.Module):
     def __init__(self, pretrained=True, freeze=True):
@@ -32,7 +29,6 @@ class ResNet50Backbone(nn.Module):
             for param in self.layer3.parameters():
                 param.requires_grad = True
 
-
 class AttentiveNetwork(nn.Module):
 
     def __init__(self, in_channels=512, out_dim=2048, reduction=16):
@@ -53,8 +49,6 @@ class AttentiveNetwork(nn.Module):
         att = self.mlp(v)
         return att
 
-
-
 class MultiModalNetwork(nn.Module):
     def __init__(self, in_dim):
         super().__init__()
@@ -70,7 +64,6 @@ class MultiModalNetwork(nn.Module):
 
     def forward(self, x):
         return self.net(x)
-
 
 class MMFN(nn.Module):
     def __init__(self, num_classes, tabular_dim, ratio):
