@@ -1,0 +1,8 @@
+defaults:
+  - data: cloudes
+  - network: MMFN
+  - _self_
+
+trainer:
+  max_epochs: 50
+

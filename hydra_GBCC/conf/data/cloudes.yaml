@@ -1,0 +1,7 @@
+name: cloudes
+
+_target_: gsn_classification.lightning_data_modules.cloudes.CloudDataModule
+batch_size: 100
+data_dir: './MGCD/'
+train_dataset_path: './MGCD/MGCD/train'
+test_dataset_path: './MGCD/MGCD/test'
