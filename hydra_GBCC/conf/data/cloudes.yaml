@@ -5,3 +5,4 @@ batch_size: 100
 data_dir: './MGCD/'
 train_dataset_path: './MGCD/MGCD/train'
 test_dataset_path: './MGCD/MGCD/test'
+num_workers: 3

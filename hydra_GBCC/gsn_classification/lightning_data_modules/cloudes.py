@@ -21,11 +21,18 @@ import zipfile
 from gsn_classification.lightning_data_modules.tab import CloudImageTabularDataset
 
 class CloudDataModule(L.LightningDataModule):
-    def __init__(self, batch_size, data_dir: str = './MGCD/', train_dataset_path='./MGCD/MGCD/train', test_dataset_path='./MGCD/MGCD/test', **kwargs):
+    def __init__(self,
+                batch_size,
+                data_dir: str = './MGCD/',
+                train_dataset_path='./MGCD/MGCD/train',
+                test_dataset_path='./MGCD/MGCD/test',
+                num_workers=3,
+                **kwargs):
         super().__init__()
         self.batch_size = batch_size
         self.train_dataset_path = train_dataset_path
         self.test_dataset_path = test_dataset_path
+        self.num_workers = num_workers
         self.data_dir = data_dir
         self.zip_name = 'MGCD.zip'
         self.image_size = (252, 252)
@@ -101,10 +108,10 @@ class CloudDataModule(L.LightningDataModule):
                 zip_ref.extractall(self.data_dir)
 
     def train_dataloader(self):
-        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True)
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers, pin_memory=True)
 
     def val_dataloader(self):
-        return DataLoader(self.val_dataset, batch_size=self.batch_size)
+        return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=self.num_workers, pin_memory=True)
 
     def test_dataloader(self):
-        return DataLoader(self.test_dataset, batch_size=self.batch_size)
+        return DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers, pin_memory=True)
