@@ -40,10 +40,9 @@ def main(cfg: DictConfig):
     data_module.prepare_data()
     data_module.setup()
 
-    os.environ.setdefault("WANDB_API_KEY", "05a459841786c9f37d82bc178a0d72c923c25156")
     os.environ["WANDB_START_METHOD"] = "thread"
     os.environ.setdefault("WANDB_INIT_TIMEOUT", "60")
-    wandb.login(key=os.environ["WANDB_API_KEY"], relogin=True)
+    #wandb.login(key=os.environ["WANDB_API_KEY"], relogin=True)
 
     run_name = cfg.get("tag", "experiment")
 
@@ -74,19 +73,16 @@ def main(cfg: DictConfig):
     lr_monitor = LearningRateMonitor(logging_interval="epoch")
 
     api = wandb.Api()
-    artifact_path = 'rafi_mys-politechnika-warszawska/wandb-multimodal/model-xtm5fags:v3'
-    artifact = api.artifact(artifact_path, type='model')
-    artifact_dir = artifact.download()
+    #artifact_path = 'rafi_mys-politechnika-warszawska/wandb-multimodal/model-xtm5fags:v3'
+    #artifact = api.artifact(artifact_path, type='model')
+    #artifact_dir = artifact.download()
 
     #print(f"Model pobrany do: {artifact_dir}")
-
-    # 3. Znalezienie pliku .ckpt
-    checkpoint_file = [f for f in os.listdir(artifact_dir) if f.endswith('.ckpt')][0]
-    checkpoint_path = os.path.join(artifact_dir, checkpoint_file)
+    #checkpoint_file = [f for f in os.listdir(artifact_dir) if f.endswith('.ckpt')][0]
+    #checkpoint_path = os.path.join(artifact_dir, checkpoint_file)
+    #classifier = MMNFLitModel.load_from_checkpoint(checkpoint_path)
 
     model = instantiate(cfg.network)
-
-    #classifier = TransferResNet152LitModel.load_from_checkpoint(checkpoint_path)
 
     trainer = Trainer(
         max_epochs=cfg.trainer.max_epochs,
