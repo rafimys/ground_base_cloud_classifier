@@ -3,6 +3,7 @@ import lightning as L
 from lightning.pytorch import Trainer, seed_everything
 from lightning.pytorch.loggers import TensorBoardLogger, WandbLogger
 from lightning.pytorch.callbacks import Callback, ModelCheckpoint, EarlyStopping, LearningRateMonitor, TQDMProgressBar
+import torch
 import torchmetrics
 
 from torchmetrics.classification import accuracy
@@ -15,10 +16,22 @@ from hydra.utils import get_original_cwd, to_absolute_path
 
 from omegaconf import DictConfig, OmegaConf
 
+class TextLoggerCallback(Callback):
+    def on_train_epoch_end(self, trainer, pl_module):
+        epoch = trainer.current_epoch
+        train_loss = trainer.callback_metrics.get("train_loss_epoch", "N/A")
+        print(f"--- EPOKA {epoch} ZAKOŃCZONA ---")
+        print(f"Średni Train Loss: {train_loss:.4f}" if isinstance(train_loss, torch.Tensor) else "Train Loss: N/A")
 
-
-
-
+    def on_validation_epoch_end(self, trainer, pl_module):
+        if trainer.sanity_checking:
+            return
+            
+        val_acc = trainer.callback_metrics.get("val_acc", "N/A")
+        val_loss = trainer.callback_metrics.get("val_loss", "N/A")
+        
+        print(f"Wyniki Walidacji -> Loss: {val_loss:.4f}, Acc: {val_acc:.4f}")
+        print("-" * 30)
 
 @hydra.main(version_base="1.3", config_path="conf", config_name="config")
 def main(cfg: DictConfig):
@@ -53,6 +66,8 @@ def main(cfg: DictConfig):
         filename=MODEL_CKPT,
         save_top_k=3,
         mode='min')
+    
+    text_logger = TextLoggerCallback()
 
     lr_monitor = LearningRateMonitor(logging_interval="epoch")
 
@@ -77,9 +92,8 @@ def main(cfg: DictConfig):
         devices=1,
         logger=logger,
         log_every_n_steps = 10,
-        callbacks=[early_stopping, checkpoint_callback, lr_monitor],
-        fast_dev_run=False,
-        enable_progress_bar=cfg.trainer.enable_progress_bar
+        callbacks=[early_stopping, checkpoint_callback, lr_monitor, text_logger],
+        fast_dev_run=False
     )
 
     trainer.fit(model=model, datamodule=data_module)
