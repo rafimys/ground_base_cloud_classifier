@@ -99,6 +99,7 @@ def main(cfg: DictConfig):
     )
 
     trainer.fit(model=model, datamodule=data_module)
-
+    trainer.validate(model=model, datamodule=data_module)
+    trainer.test(model=model, datamodule=data_module)
 if __name__ == "__main__":
     main()
