@@ -7,4 +7,3 @@ num_classes: 7
 activation:
   _target_: torch.nn.LeakyReLU
   negative_slope: 0.1
-  inpalce: True
