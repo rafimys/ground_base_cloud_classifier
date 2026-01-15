@@ -3,6 +3,8 @@ defaults:
   - network: MMFN
   - _self_
 
+tag: "default_run"
+
 trainer:
   max_epochs: 50
   enable_progress_bar: False

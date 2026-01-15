@@ -45,9 +45,11 @@ def main(cfg: DictConfig):
     os.environ.setdefault("WANDB_INIT_TIMEOUT", "60")
     wandb.login(key=os.environ["WANDB_API_KEY"], relogin=True)
 
+    run_name = cfg.get("tag", "experiment")
+
     logger = WandbLogger(
         project="Klasyfikator_Chmur",
-        name="run-multimodal-v1",   
+        name=run_name,   
         log_model="all"
     )
 
