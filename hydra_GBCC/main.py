@@ -2,7 +2,7 @@ import os, wandb
 import lightning as L
 from lightning.pytorch import Trainer, seed_everything
 from lightning.pytorch.loggers import TensorBoardLogger, WandbLogger
-from lightning.pytorch.callbacks import Callback, ModelCheckpoint, EarlyStopping, LearningRateMonitor
+from lightning.pytorch.callbacks import Callback, ModelCheckpoint, EarlyStopping, LearningRateMonitor, TQDMProgressBar
 import torchmetrics
 
 from torchmetrics.classification import accuracy
@@ -55,11 +55,9 @@ def main(cfg: DictConfig):
         mode='min')
 
     lr_monitor = LearningRateMonitor(logging_interval="epoch")
-
+    tqdm_progress_bar = TQDMProgressBar(refresh_rate=20)
 
     api = wandb.Api()
-
-    # 2. Pobranie artefaktu bezpośrednio przez API
     artifact_path = 'rafi_mys-politechnika-warszawska/wandb-multimodal/model-xtm5fags:v3'
     artifact = api.artifact(artifact_path, type='model')
     artifact_dir = artifact.download()
@@ -70,11 +68,9 @@ def main(cfg: DictConfig):
     checkpoint_file = [f for f in os.listdir(artifact_dir) if f.endswith('.ckpt')][0]
     checkpoint_path = os.path.join(artifact_dir, checkpoint_file)
 
-
     model = instantiate(cfg.network)
 
     #classifier = TransferResNet152LitModel.load_from_checkpoint(checkpoint_path)
-
 
     trainer = Trainer(
         max_epochs=cfg.trainer.max_epochs,
@@ -82,7 +78,7 @@ def main(cfg: DictConfig):
         devices=1,
         logger=logger,
         log_every_n_steps = 10,
-        callbacks=[early_stopping, checkpoint_callback, lr_monitor],
+        callbacks=[early_stopping, checkpoint_callback, lr_monitor, tqdm_progress_bar],
         fast_dev_run=False
     )
 
