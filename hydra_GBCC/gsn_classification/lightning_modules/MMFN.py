@@ -42,11 +42,12 @@ from hydra.utils import instantiate
 from omegaconf import DictConfig
 
 class MMFNLitModel(L.LightningModule):
-    def __init__(self, num_classes, learning_rate, ratio, activation, **kwargs):
+    def __init__(self, num_classes, learning_rate, ratio, activation, optimizer_cfg, **kwargs):
         super().__init__()
         self.save_hyperparameters(ignore=['activation'])
         self.learning_rate = learning_rate
         self.num_classes = num_classes
+        self.optimizer_cfg = optimizer_cfg
         if isinstance(activation, (dict, DictConfig)):
             self.act_fn = instantiate(activation)
         else:
@@ -93,7 +94,7 @@ class MMFNLitModel(L.LightningModule):
         return loss
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(
-    filter(lambda p: p.requires_grad, self.parameters()),
-    lr=self.learning_rate)
+        if self.optimizer_cfg:
+            return instantiate(self.optimizer_cfg, params=self.parameters(), lr=self.learning_rate)
+        optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=self.learning_rate)
         return optimizer
