@@ -46,7 +46,7 @@ class MMFNLitModel(L.LightningModule):
         self.save_hyperparameters()
         self.learning_rate = learning_rate
         self.num_classes = num_classes
-        act_fn = instantiate(activation)
+        act_fn = activation
         self.model = MMFN(num_classes=num_classes,
                           tabular_dim=4, 
                           ratio=ratio, 
