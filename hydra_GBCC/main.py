@@ -72,7 +72,7 @@ def main(cfg: DictConfig):
 
     lr_monitor = LearningRateMonitor(logging_interval="epoch")
 
-    api = wandb.Api()
+    #api = wandb.Api()
     #artifact_path = 'rafi_mys-politechnika-warszawska/wandb-multimodal/model-xtm5fags:v3'
     #artifact = api.artifact(artifact_path, type='model')
     #artifact_dir = artifact.download()
