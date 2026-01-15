@@ -44,7 +44,7 @@ from omegaconf import DictConfig
 class MMFNLitModel(L.LightningModule):
     def __init__(self, num_classes, learning_rate, ratio, activation, **kwargs):
         super().__init__()
-        self.save_hyperparameters()
+        self.save_hyperparameters(ignore=['activation'])
         self.learning_rate = learning_rate
         self.num_classes = num_classes
         if isinstance(activation, (dict, DictConfig)):
@@ -54,7 +54,7 @@ class MMFNLitModel(L.LightningModule):
         self.model = MMFN(num_classes=num_classes,
                           tabular_dim=4, 
                           ratio=ratio, 
-                          activation_cls=self.act_fn)
+                          activation=self.act_fn)
 
     def forward(self, img, tab):
         return self.model(img, tab)
