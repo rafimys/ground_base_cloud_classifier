@@ -55,7 +55,6 @@ def main(cfg: DictConfig):
         mode='min')
 
     lr_monitor = LearningRateMonitor(logging_interval="epoch")
-    tqdm_progress_bar = TQDMProgressBar(refresh_rate=20)
 
     api = wandb.Api()
     artifact_path = 'rafi_mys-politechnika-warszawska/wandb-multimodal/model-xtm5fags:v3'
@@ -78,7 +77,7 @@ def main(cfg: DictConfig):
         devices=1,
         logger=logger,
         log_every_n_steps = 10,
-        callbacks=[early_stopping, checkpoint_callback, lr_monitor, tqdm_progress_bar],
+        callbacks=[early_stopping, checkpoint_callback, lr_monitor],
         fast_dev_run=False,
         enable_progress_bar=cfg.trainer.enable_progress_bar
     )
