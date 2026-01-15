@@ -50,15 +50,15 @@ class AttentiveNetwork(nn.Module):
         return att
 
 class MultiModalNetwork(nn.Module):
-    def __init__(self, in_dim):
+    def __init__(self, in_dim, activation_cls=nn.LeakyReLU(0.1)):
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(in_dim, 128),
-            nn.ReLU(),
+            activation_cls(),
             nn.Linear(128, 256),
-            nn.ReLU(),
+            activation_cls(),
             nn.Linear(256, 512),
-            nn.ReLU(),
+            activation_cls(),
             nn.Linear(512, 2048)
         )
 
@@ -66,12 +66,12 @@ class MultiModalNetwork(nn.Module):
         return self.net(x)
 
 class MMFN(nn.Module):
-    def __init__(self, num_classes, tabular_dim, ratio):
+    def __init__(self, num_classes, tabular_dim, ratio, activation_cls=nn.LeakyReLU(0.1)):
         super().__init__()
 
         self.backbone = ResNet50Backbone(pretrained=True)
         self.att_net = AttentiveNetwork()
-        self.mm_net = MultiModalNetwork(tabular_dim)
+        self.mm_net = MultiModalNetwork(tabular_dim, activation_cls=nn.LeakyReLU(0.1))
         self.ratio = ratio
         self.fc = nn.Linear(2048 * 2, num_classes)
 

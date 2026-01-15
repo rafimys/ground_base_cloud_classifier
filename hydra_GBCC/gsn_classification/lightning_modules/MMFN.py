@@ -38,13 +38,19 @@ import torchmetrics
 from torchmetrics.classification import accuracy
 from gsn_classification.lightning_modules.MMFN_model import MMFN
 
+from hydra.utils import instantiate
+
 class MMFNLitModel(L.LightningModule):
-    def __init__(self, num_classes, learning_rate, ratio, **kwargs):
+    def __init__(self, num_classes, learning_rate, ratio, activation, **kwargs):
         super().__init__()
         self.save_hyperparameters()
         self.learning_rate = learning_rate
         self.num_classes = num_classes
-        self.model = MMFN(num_classes=num_classes, tabular_dim=4, ratio=ratio)
+        act_fn = instantiate(activation)
+        self.model = MMFN(num_classes=num_classes,
+                          tabular_dim=4, 
+                          ratio=ratio, 
+                          activational_cls=act_fn)
 
     def forward(self, img, tab):
         return self.model(img, tab)
