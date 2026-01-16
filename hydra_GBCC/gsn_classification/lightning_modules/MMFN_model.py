@@ -66,10 +66,10 @@ class MultiModalNetwork(nn.Module):
         return self.net(x)
 
 class MMFN(nn.Module):
-    def __init__(self, num_classes, tabular_dim, ratio, activation):
+    def __init__(self, num_classes, tabular_dim, ratio, activation, freeze=True):
         super().__init__()
 
-        self.backbone = ResNet50Backbone(pretrained=True)
+        self.backbone = ResNet50Backbone(pretrained=True, freeze=freeze)
         self.att_net = AttentiveNetwork()
         self.mm_net = MultiModalNetwork(tabular_dim, activation)
         self.ratio = ratio
