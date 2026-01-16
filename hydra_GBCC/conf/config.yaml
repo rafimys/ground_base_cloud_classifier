@@ -9,3 +9,6 @@ trainer:
   max_epochs: 50
   enable_progress_bar: False
 
+optimizer_cfg:
+  _target_: torch.optim.Adam
+  weight_decay: 1e-5
