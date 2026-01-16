@@ -4,6 +4,7 @@ _target_: gsn_classification.lightning_modules.MMFN.MMFNLitModel
 ratio: 0.3
 learning_rate: 1e-4
 num_classes: 7
+freeze: True
 
 activation:
   _target_: torch.nn.LeakyReLU
@@ -12,4 +13,6 @@ activation:
 
 optimizer_cfg:
   _target_: torch.optim.Adam
+  -partial-: true
   weight_decay: 1e-5
+

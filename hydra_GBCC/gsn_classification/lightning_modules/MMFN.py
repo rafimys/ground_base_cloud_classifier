@@ -99,8 +99,8 @@ class MMFNLitModel(L.LightningModule):
         #if self.optimizer_cfg:
             #return instantiate(self.optimizer_cfg, params=self.parameters(), lr=self.learning_rate)
         optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=self.learning_rate)
-        #optimizer = self.optimizer_cfg(
-         #   filter(lambda p: p.requires_grad, self.parameters()), 
-          #  lr=self.learning_rate
-       #)
+        optimizer = self.optimizer_cfg(
+            filter(lambda p: p.requires_grad, self.parameters()), 
+            lr=self.learning_rate
+        )
         return optimizer
