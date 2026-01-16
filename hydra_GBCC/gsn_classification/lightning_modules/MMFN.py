@@ -44,7 +44,7 @@ from omegaconf import DictConfig
 class MMFNLitModel(L.LightningModule):
     def __init__(self, num_classes, learning_rate, ratio, activation, optimizer_cfg, **kwargs):
         super().__init__()
-        self.save_hyperparameters(ignore=['activation'])
+        self.save_hyperparameters(ignore=['activation', 'optimizer_cfg'])
         self.learning_rate = learning_rate
         self.num_classes = num_classes
         self.optimizer_cfg = optimizer_cfg
@@ -94,7 +94,11 @@ class MMFNLitModel(L.LightningModule):
         return loss
 
     def configure_optimizers(self):
-        if self.optimizer_cfg:
-            return instantiate(self.optimizer_cfg, params=self.parameters(), lr=self.learning_rate)
-        optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=self.learning_rate)
+        #if self.optimizer_cfg:
+            #return instantiate(self.optimizer_cfg, params=self.parameters(), lr=self.learning_rate)
+        #optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=self.learning_rate)
+        optimizer = self.optimizer_cfg(
+            filter(lambda p: p.requires_grad, self.parameters()), 
+            lr=self.learning_rate
+        )
         return optimizer
