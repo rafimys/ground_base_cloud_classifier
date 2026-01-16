@@ -13,6 +13,6 @@ activation:
 
 optimizer_cfg:
   _target_: torch.optim.Adam
-  -partial-: true
+  _partial_: true
   weight_decay: 1e-5
 
