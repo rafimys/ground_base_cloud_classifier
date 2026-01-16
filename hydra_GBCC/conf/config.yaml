@@ -11,4 +11,5 @@ trainer:
 
 optimizer_cfg:
   _target_: torch.optim.Adam
+  _partial_: true
   weight_decay: 1e-5
