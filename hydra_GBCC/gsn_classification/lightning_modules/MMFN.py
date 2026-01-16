@@ -42,13 +42,14 @@ from hydra.utils import instantiate
 from omegaconf import DictConfig
 
 class MMFNLitModel(L.LightningModule):
-    def __init__(self, num_classes, learning_rate, ratio, activation, optimizer_cfg, freeze, **kwargs):
+    def __init__(self, num_classes, learning_rate, ratio, activation, optimizer_cfg, freeze, reset_mm_biases, **kwargs):
         super().__init__()
         self.save_hyperparameters(ignore=['activation', 'optimizer_cfg'])
         self.learning_rate = learning_rate
         self.num_classes = num_classes
         self.optimizer_cfg = optimizer_cfg
         self.freezee = freeze
+        self.reset_mm_biases = reset_mm_biases
         if isinstance(activation, (dict, DictConfig)):
             self.act_fn = instantiate(activation)
         else:
@@ -57,7 +58,8 @@ class MMFNLitModel(L.LightningModule):
                           tabular_dim=4, 
                           ratio=ratio, 
                           activation=self.act_fn,
-                          freeze=self.freezee)
+                          freeze=self.freezee,
+                          reset_mm_biases=self.reset_mm_biases)
 
     def forward(self, img, tab):
         return self.model(img, tab)

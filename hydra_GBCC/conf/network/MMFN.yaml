@@ -5,6 +5,7 @@ ratio: 0.3
 learning_rate: 1e-4
 num_classes: 7
 freeze: True
+reset_mm_biases: False
 
 activation:
   _target_: torch.nn.LeakyReLU

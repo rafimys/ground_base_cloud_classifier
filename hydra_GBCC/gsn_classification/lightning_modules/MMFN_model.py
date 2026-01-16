@@ -66,7 +66,7 @@ class MultiModalNetwork(nn.Module):
         return self.net(x)
 
 class MMFN(nn.Module):
-    def __init__(self, num_classes, tabular_dim, ratio, activation, freeze=True):
+    def __init__(self, num_classes, tabular_dim, ratio, activation, freeze=True, reset_mm_biases=False):
         super().__init__()
 
         self.backbone = ResNet50Backbone(pretrained=True, freeze=freeze)
@@ -74,6 +74,16 @@ class MMFN(nn.Module):
         self.mm_net = MultiModalNetwork(tabular_dim, activation)
         self.ratio = ratio
         self.fc = nn.Linear(2048 * 2, num_classes)
+
+        if reset_mm_biases:
+            self._reset_mm_biases()
+
+    def _reset_mm_biases(self):
+        # Przechodzimy tylko przez moduły wewnątrz mm_net
+        for module in self.mm_net.modules():
+            if hasattr(module, 'bias') and module.bias is not None:
+                with torch.no_grad():
+                    module.bias.zero_()
 
     def forward(self, image, tabular):
         # === Backbone ===
